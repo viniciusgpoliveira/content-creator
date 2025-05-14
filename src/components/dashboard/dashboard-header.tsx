@@ -12,6 +12,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { useState } from "react";
 import { AnimatedSheet } from "./animated-sheet";
 import { DashboardNav } from "./dashboard-nav";
+import { useNotification } from "@/context/notification-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +28,12 @@ export function DashboardHeader() {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [open, setOpen] = useState(false);
+  const { showNotification } = useNotification();
+
+  const handleComingSoonClick = (e: React.MouseEvent, feature: string) => {
+    e.preventDefault();
+    showNotification("info", t("dashboard.featureComingSoon"));
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
@@ -65,17 +72,19 @@ export function DashboardHeader() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{t("common.profile")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard/profile" className="cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>{t("common.profile")}</span>
-                </Link>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={(e) => handleComingSoonClick(e, "profile")}
+              >
+                <User className="mr-2 h-4 w-4" />
+                <span>{t("common.profile")}</span>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard/settings" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>{t("common.settings")}</span>
-                </Link>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={(e) => handleComingSoonClick(e, "settings")}
+              >
+                <Settings className="mr-2 h-4 w-4" />
+                <span>{t("common.settings")}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
