@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureConnection } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { NextAuthConfig } from "next-auth";
 import { DefaultSession } from "next-auth";
@@ -33,6 +33,9 @@ export const authOptions: NextAuthConfig = {
           return null;
         }
 
+        // Ensure database connection is active before authorization
+        await ensureConnection();
+
         try {
           const user = await prisma.user.findUnique({
             where: {
@@ -61,9 +64,50 @@ export const authOptions: NextAuthConfig = {
             email: user.email,
             name: user.name || "",
           };
-        } catch (error) {
-          console.error("Error in authorize:", error);
-          return null;
+        } catch (dbError) {
+          console.error("Database error during login, attempting reconnection:", dbError);
+
+          // Try to reconnect and retry the operation
+          const connectionSuccess = await ensureConnection();
+
+          if (!connectionSuccess) {
+            console.error("Failed to reconnect to database during login");
+            return null;
+          }
+
+          try {
+            // Retry finding the user after reconnection
+            const user = await prisma.user.findUnique({
+              where: {
+                email: credentials.email as string,
+              },
+            });
+
+            if (!user || !user.password) {
+              console.log("User not found or no password after reconnection");
+              return null;
+            }
+
+            const isPasswordValid = await bcrypt.compare(
+              credentials.password as string,
+              user.password
+            );
+
+            if (!isPasswordValid) {
+              console.log("Password invalid after reconnection");
+              return null;
+            }
+
+            // Return only the necessary user data
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name || "",
+            };
+          } catch (retryError) {
+            console.error("Error in authorize after reconnection:", retryError);
+            return null;
+          }
         }
       },
     }),
