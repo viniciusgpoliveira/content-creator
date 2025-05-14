@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { EngagementMetricsChart } from "@/components/dashboard/engagement-metrics-chart";
+import { MetricsChart } from "@/components/dashboard/metrics-chart";
 import { LatestGenerations } from "@/components/dashboard/latest-generations";
+import { GenerateNewButton } from "@/components/dashboard/generate-new-button";
 import { useNotification } from "@/context/notification-context";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChartData } from "@/types";
@@ -92,47 +93,47 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {isLoading ? (
           <>
-            <Card>
+            <Card className="min-h-[280px] transition-all duration-500 ease-in-out">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {t("common.readTime")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-[200px] w-full" />
+                <Skeleton className="h-[200px] w-full animate-pulse" />
               </CardContent>
             </Card>
-            <Card>
+            <Card className="min-h-[280px] transition-all duration-500 ease-in-out">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {t("common.clickThrough")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-[200px] w-full" />
+                <Skeleton className="h-[200px] w-full animate-pulse" />
               </CardContent>
             </Card>
-            <Card>
+            <Card className="min-h-[280px] transition-all duration-500 ease-in-out">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {t("common.shareCount")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-[200px] w-full" />
+                <Skeleton className="h-[200px] w-full animate-pulse" />
               </CardContent>
             </Card>
           </>
         ) : (
           <>
-            <Card>
+            <Card className="min-h-[280px] transition-all duration-500 ease-in-out">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {t("common.readTime")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <EngagementMetricsChart data={metricsData.readTime} />
+                <MetricsChart data={metricsData.readTime} />
                 <div className="text-center mt-2">
                   <p className="text-xs text-muted-foreground">
                     {t("dashboard.weeklyStats")}
@@ -140,14 +141,14 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="min-h-[280px] transition-all duration-500 ease-in-out">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {t("common.clickThrough")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <EngagementMetricsChart data={metricsData.clickThrough} />
+                <MetricsChart data={metricsData.clickThrough} />
                 <div className="text-center mt-2">
                   <p className="text-xs text-muted-foreground">
                     {t("dashboard.weeklyStats")}
@@ -155,14 +156,14 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="min-h-[280px] transition-all duration-500 ease-in-out">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {t("common.shareCount")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <EngagementMetricsChart data={metricsData.shareCount} />
+                <MetricsChart data={metricsData.shareCount} />
                 <div className="text-center mt-2">
                   <p className="text-xs text-muted-foreground">
                     {t("dashboard.weeklyStats")}
@@ -176,11 +177,14 @@ export default function DashboardPage() {
 
       <div className="col-span-1 md:col-span-2 lg:col-span-3">
         <Card>
-          <CardHeader>
-            <CardTitle>{t("common.latestGenerations")}</CardTitle>
-            <CardDescription>
-              {t("dashboard.recentlyGeneratedContent")}
-            </CardDescription>
+          <CardHeader className="flex flex-row items-start justify-between">
+            <div>
+              <CardTitle>{t("common.latestGenerations")}</CardTitle>
+              <CardDescription>
+                {t("dashboard.recentlyGeneratedContent")}
+              </CardDescription>
+            </div>
+            <GenerateNewButton />
           </CardHeader>
           <CardContent>
             <LatestGenerations />
