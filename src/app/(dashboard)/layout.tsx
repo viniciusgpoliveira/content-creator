@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { DashboardNav } from "@/components/dashboard/dashboard-nav";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { NotificationProvider } from "@/context/notification-context";
+import { PageTransition } from "@/components/page-transition";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -22,7 +23,9 @@ export default function DashboardLayout({
             <DashboardNav />
           </aside>
           <main className="flex w-full flex-col overflow-hidden p-4 md:py-8 mx-auto">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
         </div>
       </div>
