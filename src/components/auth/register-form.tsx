@@ -74,7 +74,24 @@ export function RegisterForm() {
       }
 
       showNotification("success", t("auth.signUpSuccess"));
-      router.push("/login");
+
+      // Set loading state to false
+      setIsLoading(false);
+
+      // Create a success state for the button
+      const registerButton = document.getElementById("register-button");
+      if (registerButton) {
+        registerButton.classList.add("success-animation-button");
+      }
+
+      // Redirect with a delay to show the animation
+      setTimeout(() => {
+        router.push("/login");
+        // Remove the success animation if we're still on the page
+        if (registerButton) {
+          registerButton.classList.remove("success-animation-button");
+        }
+      }, 1500);
     } catch (error: any) {
       console.error("Registration error:", error);
       showNotification("error", error.message || t("errors.general"));
@@ -181,6 +198,7 @@ export function RegisterForm() {
             )}
           />
           <Button
+            id="register-button"
             type="submit"
             className="w-full cursor-pointer"
             disabled={isLoading}

@@ -120,6 +120,27 @@
   }
 }
 
+/* Success animation for login/register buttons */
+@keyframes success-pulse-button {
+  0% {
+    background-color: var(--primary);
+    transform: scale(1);
+  }
+  50% {
+    background-color: oklch(0.65 0.2 145); /* Green */
+    transform: scale(1.03);
+  }
+  100% {
+    background-color: var(--primary);
+    transform: scale(1);
+  }
+}
+
+.success-animation-button {
+  animation: success-pulse-button 1.5s ease-in-out;
+  pointer-events: none;
+}
+
 /* Prose styles for markdown content */
 .prose {
   @apply text-foreground max-w-none;
