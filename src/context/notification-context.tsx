@@ -35,10 +35,10 @@ export const NotificationProvider = ({
     const id = Math.random().toString(36).substring(2, 9);
     setNotifications((prev) => [...prev, { id, type, message }]);
 
-    // Auto-dismiss after 5 seconds
+    // Auto-dismiss after 6 seconds
     setTimeout(() => {
       dismissNotification(id);
-    }, 5000);
+    }, 6000);
   };
 
   const dismissNotification = (id: string) => {
@@ -50,15 +50,15 @@ export const NotificationProvider = ({
       value={{ notifications, showNotification, dismissNotification }}
     >
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-md">
         <AnimatePresence>
           {notifications.map((notification) => (
             <motion.div
               key={notification.id}
-              initial={{ opacity: 0, y: 50, scale: 0.3 }}
+              initial={{ opacity: 0, y: -20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-              className={`flex items-center justify-between rounded-lg p-4 shadow-lg ${
+              exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+              className={`flex items-center justify-between rounded-lg p-4 shadow-lg min-w-[300px] ${
                 notification.type === "success"
                   ? "bg-green-500 text-white"
                   : notification.type === "error"
