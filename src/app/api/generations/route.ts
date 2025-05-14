@@ -26,46 +26,86 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const validatedParams = getGenerationsSchema.safeParse({
+
+    // Log the received parameters for debugging
+    console.log("Received parameters:", {
       toolType: searchParams.get("toolType"),
       limit: searchParams.get("limit"),
       page: searchParams.get("page"),
     });
 
-    if (!validatedParams.success) {
-      return NextResponse.json(
-        { error: validatedParams.error.message },
-        { status: 400 }
-      );
+    // Use default values if parameters are invalid
+    let toolType = searchParams.get("toolType");
+    if (toolType && !['blog', 'caption'].includes(toolType)) {
+      toolType = undefined;
     }
 
-    const { toolType, limit, page } = validatedParams.data;
+    let limit = 10;
+    try {
+      const limitParam = searchParams.get("limit");
+      if (limitParam) {
+        const parsedLimit = parseInt(limitParam, 10);
+        if (!isNaN(parsedLimit) && parsedLimit > 0 && parsedLimit <= 50) {
+          limit = parsedLimit;
+        }
+      }
+    } catch (e) {
+      console.warn("Invalid limit parameter");
+    }
+
+    let page = 1;
+    try {
+      const pageParam = searchParams.get("page");
+      if (pageParam) {
+        const parsedPage = parseInt(pageParam, 10);
+        if (!isNaN(parsedPage) && parsedPage > 0) {
+          page = parsedPage;
+        }
+      }
+    } catch (e) {
+      console.warn("Invalid page parameter");
+    }
+
+    // Calculate skip for pagination
     const skip = (page - 1) * limit;
 
+    // Build the where clause
     const where = {
       userId: session.user.id,
       ...(toolType ? { toolType } : {}),
     };
 
-    const [generations, total] = await Promise.all([
-      prisma.generation.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        take: limit,
-        skip,
-      }),
-      prisma.generation.count({ where }),
-    ]);
+    console.log("Using parameters:", { toolType, limit, page, skip });
 
-    return NextResponse.json({
-      generations,
-      pagination: {
-        total,
-        pages: Math.ceil(total / limit),
-        page,
-        limit,
-      },
-    });
+    try {
+      const [generations, total] = await Promise.all([
+        prisma.generation.findMany({
+          where,
+          orderBy: { createdAt: "desc" },
+          take: limit,
+          skip,
+        }),
+        prisma.generation.count({ where }),
+      ]);
+
+      console.log(`Found ${generations.length} generations out of ${total} total`);
+
+      return NextResponse.json({
+        generations,
+        pagination: {
+          total,
+          pages: Math.ceil(total / limit),
+          page,
+          limit,
+        },
+      });
+    } catch (dbError) {
+      console.error("Database error:", dbError);
+      return NextResponse.json(
+        { error: "Database error", message: "Failed to fetch generations from database" },
+        { status: 500 }
+      );
+    }
   } catch (error) {
     console.error("Error fetching generations:", error);
     return NextResponse.json(
