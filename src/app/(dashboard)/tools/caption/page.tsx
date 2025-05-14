@@ -45,9 +45,13 @@ export default function CaptionGeneratorPage() {
   const { showNotification } = useNotification();
   const [activeTab, setActiveTab] = useState<string>("form");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState<{
+    productTheme: string;
+    platform: "twitter" | "linkedin" | "instagram" | "facebook";
+    description: string;
+  }>({
     productTheme: "",
-    platform: "instagram" as const,
+    platform: "instagram",
     description: "",
   });
   const captionGeneratorRef = useRef<{ complete: (prompt: string, options?: any) => void } | null>(null);

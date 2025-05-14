@@ -45,9 +45,13 @@ export default function BlogGeneratorPage() {
   const { showNotification } = useNotification();
   const [activeTab, setActiveTab] = useState<string>("form");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState<{
+    topic: string;
+    tone: "professional" | "casual" | "humorous" | "formal" | "friendly";
+    description: string;
+  }>({
     topic: "",
-    tone: "professional" as const,
+    tone: "professional",
     description: "",
   });
   const blogGeneratorRef = useRef<{ complete: (prompt: string, options?: any) => void } | null>(null);

@@ -1,20 +1,14 @@
-import { Metadata } from "next";
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getTranslations } from "@/lib/i18n-server";
+import { useTranslation } from "react-i18next";
 
-export const metadata: Metadata = {
-  title: "Authentication Error",
-  description: "An error occurred during authentication",
-};
-
-export default async function AuthErrorPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const t = await getTranslations();
-  const error = searchParams.error as string;
+export default function AuthErrorPage() {
+  const { t } = useTranslation();
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error") as string;
 
   // Map error codes to user-friendly messages
   const errorMessages: Record<string, string> = {

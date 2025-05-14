@@ -17,14 +17,9 @@ declare module "next-auth" {
   }
 }
 
-// Create a custom adapter function to fix type issues
-const customPrismaAdapter = (client: PrismaClient) => {
-  return PrismaAdapter(client as any);
-};
-
 export const authOptions: NextAuthConfig = {
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: customPrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma as any),
   debug: process.env.NODE_ENV === "development",
   providers: [
     Credentials({
@@ -42,7 +37,7 @@ export const authOptions: NextAuthConfig = {
         try {
           const user = await prisma.user.findUnique({
             where: {
-              email: credentials.email,
+              email: credentials.email as string,
             },
           });
 
@@ -52,7 +47,7 @@ export const authOptions: NextAuthConfig = {
           }
 
           const isPasswordValid = await bcrypt.compare(
-            credentials.password,
+            credentials.password as string,
             user.password
           );
 

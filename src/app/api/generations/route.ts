@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     // Use default values if parameters are invalid
     let toolType = searchParams.get("toolType");
     if (toolType && !['blog', 'caption'].includes(toolType)) {
-      toolType = undefined;
+      toolType = null;
     }
 
     let limit = 10;

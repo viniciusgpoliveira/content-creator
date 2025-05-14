@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  const id = request.nextUrl.pathname.split('/').pop();
   try {
     const session = await auth();
 
@@ -15,7 +13,7 @@ export async function GET(
 
     const generation = await prisma.generation.findUnique({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -34,10 +32,8 @@ export async function GET(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
+  const id = request.nextUrl.pathname.split('/').pop();
   try {
     const session = await auth();
 
@@ -48,7 +44,7 @@ export async function DELETE(
     // First check if the generation exists and belongs to the user
     const generation = await prisma.generation.findUnique({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -60,7 +56,7 @@ export async function DELETE(
     // Delete the generation
     await prisma.generation.delete({
       where: {
-        id: params.id,
+        id,
       },
     });
 
