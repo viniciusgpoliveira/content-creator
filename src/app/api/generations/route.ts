@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureConnection } from "@/lib/prisma";
 import { z } from "zod";
 
 // Schema for GET request
@@ -78,29 +78,61 @@ export async function GET(request: NextRequest) {
     console.log("Using parameters:", { toolType, limit, page, skip });
 
     try {
-      const [generations, total] = await Promise.all([
-        prisma.generation.findMany({
+      // Ensure database connection is active before querying
+      await ensureConnection();
+
+      try {
+        const [generations, total] = await Promise.all([
+          prisma.generation.findMany({
+            where,
+            orderBy: { createdAt: "desc" },
+            take: limit,
+            skip,
+          }),
+          prisma.generation.count({ where }),
+        ]);
+
+        console.log(`Found ${generations.length} generations out of ${total} total`);
+
+        return NextResponse.json({
+          generations,
+          pagination: {
+            total,
+            pages: Math.ceil(total / limit),
+            page,
+            limit,
+          },
+        });
+      } catch (dbError) {
+        console.error("Database error, attempting reconnection:", dbError);
+
+        // Try to reconnect and retry the query
+        await ensureConnection();
+
+        // Execute queries separately after reconnection
+        const generations = await prisma.generation.findMany({
           where,
           orderBy: { createdAt: "desc" },
           take: limit,
           skip,
-        }),
-        prisma.generation.count({ where }),
-      ]);
+        });
 
-      console.log(`Found ${generations.length} generations out of ${total} total`);
+        const total = await prisma.generation.count({ where });
 
-      return NextResponse.json({
-        generations,
-        pagination: {
-          total,
-          pages: Math.ceil(total / limit),
-          page,
-          limit,
-        },
-      });
+        console.log(`After reconnection: Found ${generations.length} generations out of ${total} total`);
+
+        return NextResponse.json({
+          generations,
+          pagination: {
+            total,
+            pages: Math.ceil(total / limit),
+            page,
+            limit,
+          },
+        });
+      }
     } catch (dbError) {
-      console.error("Database error:", dbError);
+      console.error("Database error after reconnection attempt:", dbError);
       return NextResponse.json(
         { error: "Database error", message: "Failed to fetch generations from database" },
         { status: 500 }
@@ -135,16 +167,37 @@ export async function POST(request: NextRequest) {
 
     const { toolType, inputParams, outputContent } = validatedBody.data;
 
-    const generation = await prisma.generation.create({
-      data: {
-        userId: session.user.id,
-        toolType,
-        inputParams,
-        outputContent,
-      },
-    });
+    // Ensure database connection is active before creating
+    await ensureConnection();
 
-    return NextResponse.json(generation);
+    try {
+      const generation = await prisma.generation.create({
+        data: {
+          userId: session.user.id,
+          toolType,
+          inputParams,
+          outputContent,
+        },
+      });
+
+      return NextResponse.json(generation);
+    } catch (dbError) {
+      console.error("Database error in create, attempting reconnection:", dbError);
+
+      // Try to reconnect and retry
+      await ensureConnection();
+
+      const generation = await prisma.generation.create({
+        data: {
+          userId: session.user.id,
+          toolType,
+          inputParams,
+          outputContent,
+        },
+      });
+
+      return NextResponse.json(generation);
+    }
   } catch (error) {
     console.error("Error creating generation:", error);
     return NextResponse.json(

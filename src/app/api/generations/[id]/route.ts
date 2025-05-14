@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureConnection } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   const id = request.nextUrl.pathname.split('/').pop();
@@ -11,18 +11,41 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const generation = await prisma.generation.findUnique({
-      where: {
-        id,
-        userId: session.user.id,
-      },
-    });
+    // Ensure database connection is active
+    await ensureConnection();
 
-    if (!generation) {
-      return NextResponse.json({ error: "Generation not found" }, { status: 404 });
+    try {
+      const generation = await prisma.generation.findUnique({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+
+      if (!generation) {
+        return NextResponse.json({ error: "Generation not found" }, { status: 404 });
+      }
+
+      return NextResponse.json(generation);
+    } catch (dbError) {
+      console.error("Database error, attempting reconnection:", dbError);
+
+      // Try to reconnect and retry
+      await ensureConnection();
+
+      const generation = await prisma.generation.findUnique({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+
+      if (!generation) {
+        return NextResponse.json({ error: "Generation not found" }, { status: 404 });
+      }
+
+      return NextResponse.json(generation);
     }
-
-    return NextResponse.json(generation);
   } catch (error) {
     console.error("Error fetching generation:", error);
     return NextResponse.json(
@@ -41,26 +64,57 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // First check if the generation exists and belongs to the user
-    const generation = await prisma.generation.findUnique({
-      where: {
-        id,
-        userId: session.user.id,
-      },
-    });
+    // Ensure database connection is active
+    await ensureConnection();
 
-    if (!generation) {
-      return NextResponse.json({ error: "Generation not found" }, { status: 404 });
+    try {
+      // First check if the generation exists and belongs to the user
+      const generation = await prisma.generation.findUnique({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+
+      if (!generation) {
+        return NextResponse.json({ error: "Generation not found" }, { status: 404 });
+      }
+
+      // Delete the generation
+      await prisma.generation.delete({
+        where: {
+          id,
+        },
+      });
+
+      return NextResponse.json({ message: "Generation deleted successfully" });
+    } catch (dbError) {
+      console.error("Database error, attempting reconnection:", dbError);
+
+      // Try to reconnect and retry
+      await ensureConnection();
+
+      // Check again after reconnection
+      const generation = await prisma.generation.findUnique({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+
+      if (!generation) {
+        return NextResponse.json({ error: "Generation not found" }, { status: 404 });
+      }
+
+      // Delete the generation
+      await prisma.generation.delete({
+        where: {
+          id,
+        },
+      });
+
+      return NextResponse.json({ message: "Generation deleted successfully" });
     }
-
-    // Delete the generation
-    await prisma.generation.delete({
-      where: {
-        id,
-      },
-    });
-
-    return NextResponse.json({ message: "Generation deleted successfully" });
   } catch (error) {
     console.error("Error deleting generation:", error);
     return NextResponse.json(

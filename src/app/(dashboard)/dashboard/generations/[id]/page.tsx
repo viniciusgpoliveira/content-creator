@@ -37,7 +37,7 @@ export default function GenerationDetailsPage() {
       try {
         setIsLoading(true);
         const response = await fetch(`/api/generations/${params.id}`);
-        
+
         if (!response.ok) {
           if (response.status === 404) {
             showNotification("error", t("dashboard.generationNotFound"));
@@ -46,7 +46,7 @@ export default function GenerationDetailsPage() {
           }
           throw new Error(`Error ${response.status}`);
         }
-        
+
         const data = await response.json();
         setGeneration(data);
       } catch (error) {
@@ -64,33 +64,37 @@ export default function GenerationDetailsPage() {
 
   const handleDelete = async () => {
     if (!generation) return;
-    
+
     if (!window.confirm(t("dashboard.confirmDelete"))) {
       return;
     }
-    
+
     try {
       setIsDeleting(true);
+
+      // Immediately redirect to dashboard to prevent trying to reload deleted content
+      // This prevents the error where the page tries to load a deleted generation
+      router.push("/dashboard");
+
+      // Then perform the deletion in the background
       const response = await fetch(`/api/generations/${generation.id}`, {
         method: "DELETE",
       });
-      
+
       if (!response.ok) {
         throw new Error(`Error ${response.status}`);
       }
-      
+
       showNotification("success", t("dashboard.generationDeleted"));
-      router.push("/dashboard");
     } catch (error) {
       console.error("Error deleting generation:", error);
       showNotification("error", t("errors.general"));
-      setIsDeleting(false);
     }
   };
 
   const handleCopy = async () => {
     if (!generation) return;
-    
+
     try {
       await copyToClipboard(generation.outputContent);
       showNotification("success", t("common.contentCopied"));
@@ -101,9 +105,9 @@ export default function GenerationDetailsPage() {
 
   const renderInputParams = () => {
     if (!generation) return null;
-    
+
     const params = generation.inputParams;
-    
+
     return (
       <div className="space-y-2">
         {Object.entries(params).map(([key, value]) => (
@@ -120,7 +124,7 @@ export default function GenerationDetailsPage() {
 
   const renderContent = () => {
     if (!generation) return null;
-    
+
     if (generation.toolType === "blog") {
       return <BlogPostPreview content={generation.outputContent} />;
     } else {
@@ -195,39 +199,39 @@ export default function GenerationDetailsPage() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => router.push("/dashboard")}
             className="h-10 w-10"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h1 className="text-2xl font-bold">
-            {generation.toolType === "blog" 
-              ? t("blogGenerator.title") 
+            {generation.toolType === "blog"
+              ? t("blogGenerator.title")
               : t("captionGenerator.title")}
           </h1>
           <Badge variant={generation.toolType === "blog" ? "default" : "secondary"}>
-            {generation.toolType === "blog" 
-              ? <FileText className="mr-1 h-3 w-3" /> 
+            {generation.toolType === "blog"
+              ? <FileText className="mr-1 h-3 w-3" />
               : <MessageSquare className="mr-1 h-3 w-3" />}
             {generation.toolType}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleCopy}
             className="flex items-center gap-1"
           >
             <Copy className="h-4 w-4" />
             {t("common.copy")}
           </Button>
-          <Button 
-            variant="destructive" 
-            size="sm" 
+          <Button
+            variant="destructive"
+            size="sm"
             onClick={handleDelete}
             disabled={isDeleting}
             className="flex items-center gap-1"
