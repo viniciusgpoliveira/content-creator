@@ -57,13 +57,14 @@ This is a modern Content Creator Dashboard built with Next.js (App Router), Reac
 - Authentication with Auth.js (NextAuth.js v5)
 - User registration with password hashing
 - Dashboard with engagement metrics visualization
-- Blog Post Generator with OpenAI integration
+- Blog Post Generator with OpenAI GPT-4o-mini integration
 - Social Caption Generator with platform-specific outputs
 - Dark/light theme toggle
 - Responsive design for all screen sizes
 - Comprehensive i18n support for all text content
 - Loading states with spinners for better UX
 - Form validation with translated error messages
+- Automatic saving of generated content
 
 ## Development Status
 - Project setup complete
@@ -76,9 +77,11 @@ This is a modern Content Creator Dashboard built with Next.js (App Router), Reac
 - Responsive design implemented
 
 ## API Integration
-- OpenAI API for content generation
-- Streaming responses for real-time feedback
+- OpenAI API for content generation using GPT-4o-mini model
+- Simulated streaming responses for real-time feedback
 - Error handling for API failures
+- Optional description field for better AI generation results
+- Automatic saving of generated content to database
 
 ## Database
 - PostgreSQL with Prisma ORM
