@@ -22,6 +22,8 @@ This is a modern Content Creator Dashboard built with Next.js (App Router), Reac
   - `/auth` - Authentication-related pages
   - `/login` - Login page
   - `/register` - Registration page
+  - `/privacy` - Privacy Policy page
+  - `/terms` - Terms of Service page
 - `/src/components` - Reusable React components
   - `/ui` - shadcn/ui components
   - `/dashboard` - Dashboard-specific components
@@ -111,6 +113,9 @@ This is a modern Content Creator Dashboard built with Next.js (App Router), Reac
   - Sidebar animations for mobile navigation
   - Proper contrast in both light and dark themes
   - Visual feedback for form errors
+  - Privacy Policy and Terms of Service pages with client-side back navigation
+  - Legal pages accessible from auth screens with proper centering
+  - Custom BackButton component for safe navigation
 
 ## Code Quality
 - The codebase follows best practices:

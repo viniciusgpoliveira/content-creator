@@ -16,6 +16,7 @@ export const enTranslations = {
     author3: "Michael Chen",
   },
   common: {
+    back: "Back",
     welcome: "Content Creator Dashboard",
     appName: "Content Creator",
     login: "Login",
@@ -194,5 +195,119 @@ export const enTranslations = {
     accessDenied: "You do not have permission to sign in.",
     verification: "The verification link may have expired or has already been used.",
     backToLogin: "Back to login",
+    back: "Back",
+  },
+  privacy: {
+    title: "Privacy Policy",
+    lastUpdated: "Last updated: {{date}}",
+    introduction: {
+      title: "Introduction",
+      content1: "Welcome to Content Creator Dashboard. We respect your privacy and are committed to protecting your personal data.",
+      content2: "This Privacy Policy explains how we collect, use, and safeguard your information when you use our service."
+    },
+    dataCollection: {
+      title: "Information We Collect",
+      content1: "We collect the following types of information:",
+      item1: "Personal information (name, email address) provided during registration",
+      item2: "Usage data and interaction with our services",
+      item3: "Content you generate using our AI tools",
+      item4: "Technical data such as IP address, browser type, and device information"
+    },
+    dataUsage: {
+      title: "How We Use Your Information",
+      content: "We use your information for the following purposes:",
+      item1: "To provide and maintain our service",
+      item2: "To notify you about changes to our service",
+      item3: "To provide customer support",
+      item4: "To improve our service and develop new features"
+    },
+    cookies: {
+      title: "Cookies and Tracking",
+      content1: "We use cookies and similar tracking technologies to track activity on our service and hold certain information.",
+      content2: "Cookies are files with a small amount of data that may include an anonymous unique identifier."
+    },
+    thirdParty: {
+      title: "Third-Party Services",
+      content: "We may employ third-party companies and individuals for the following reasons:",
+      item1: "To facilitate our service (such as OpenAI for content generation)",
+      item2: "To provide the service on our behalf or assist us in analyzing how our service is used"
+    },
+    security: {
+      title: "Security",
+      content: "We value your trust in providing us your personal information, thus we strive to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee its absolute security."
+    },
+    userRights: {
+      title: "Your Rights",
+      content: "You have the following rights regarding your personal data:",
+      item1: "The right to access, update or delete the information we have on you",
+      item2: "The right to rectification - the right to request that we correct any information you believe is inaccurate",
+      item3: "The right to object to our processing of your personal data",
+      item4: "The right to data portability - the right to request that we transfer the data we have collected to another organization"
+    },
+    changes: {
+      title: "Changes to This Privacy Policy",
+      content: "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the 'last updated' date."
+    },
+    contact: {
+      title: "Contact Us",
+      content: "If you have any questions about this Privacy Policy, please contact us at privacy@contentcreator.com"
+    }
+  },
+  terms: {
+    title: "Terms of Service",
+    lastUpdated: "Last updated: {{date}}",
+    introduction: {
+      title: "Introduction",
+      content1: "Welcome to Content Creator Dashboard. By accessing or using our service, you agree to be bound by these Terms of Service.",
+      content2: "If you disagree with any part of the terms, you may not access the service."
+    },
+    accountResponsibilities: {
+      title: "Account Responsibilities",
+      content: "When you create an account with us, you must:",
+      item1: "Provide accurate, current, and complete information",
+      item2: "Maintain the security of your account and password",
+      item3: "Accept responsibility for all activities that occur under your account",
+      item4: "Notify us immediately of any security breaches or unauthorized use of your account"
+    },
+    contentGuidelines: {
+      title: "Content Guidelines",
+      content: "You agree not to use our service to create, upload, or share content that:",
+      item1: "Is illegal, harmful, threatening, abusive, harassing, defamatory, or otherwise objectionable",
+      item2: "Infringes on the intellectual property rights of others",
+      item3: "Contains malware, viruses, or any harmful code",
+      item4: "Violates the privacy or publicity rights of any third party"
+    },
+    intellectualProperty: {
+      title: "Intellectual Property",
+      content1: "The service and its original content, features, and functionality are and will remain the exclusive property of Content Creator Dashboard and its licensors.",
+      content2: "Our service may contain content you create using our AI tools. You retain ownership of your content, but grant us a license to use, reproduce, and display such content in connection with the service."
+    },
+    aiContent: {
+      title: "AI-Generated Content",
+      content1: "Our service uses artificial intelligence to generate content. While we strive to ensure the quality and appropriateness of AI-generated content, we cannot guarantee its accuracy, originality, or suitability for any specific purpose.",
+      content2: "You are responsible for reviewing and editing AI-generated content before using it for any purpose. We are not liable for any consequences resulting from your use of AI-generated content."
+    },
+    termination: {
+      title: "Termination",
+      content: "We may terminate or suspend your account and access to the service immediately, without prior notice or liability, for any reason, including:",
+      item1: "Breach of these Terms of Service",
+      item2: "At our sole discretion, for any reason whatsoever"
+    },
+    limitation: {
+      title: "Limitation of Liability",
+      content: "In no event shall Content Creator Dashboard, its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service."
+    },
+    changes: {
+      title: "Changes to Terms",
+      content: "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect."
+    },
+    governing: {
+      title: "Governing Law",
+      content: "These Terms shall be governed and construed in accordance with the laws, without regard to its conflict of law provisions."
+    },
+    contact: {
+      title: "Contact Us",
+      content: "If you have any questions about these Terms, please contact us at terms@contentcreator.com"
+    }
   },
 };
