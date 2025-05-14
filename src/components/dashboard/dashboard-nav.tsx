@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,25 +56,46 @@ export function DashboardNav({ onItemClick }: DashboardNavProps) {
     },
   ];
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, x: -20 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+  };
+
   return (
-    <nav className="grid items-start gap-2 px-2 py-4">
-      {navItems.map((item) => (
-        <Button
-          key={item.href}
-          variant={pathname === item.href ? "default" : "ghost"}
-          className={cn(
-            "justify-start",
-            pathname === item.href && "bg-primary text-primary-foreground"
-          )}
-          asChild
-          onClick={onItemClick}
-        >
-          <Link href={item.href}>
-            {item.icon}
-            {item.title}
-          </Link>
-        </Button>
+    <motion.nav
+      className="grid items-start gap-2 px-2 py-4"
+      variants={container}
+      initial="hidden"
+      animate="show"
+    >
+      {navItems.map((navItem) => (
+        <motion.div key={navItem.href} variants={item}>
+          <Button
+            variant={pathname === navItem.href ? "default" : "ghost"}
+            className={cn(
+              "justify-start w-full",
+              pathname === navItem.href && "bg-primary text-primary-foreground"
+            )}
+            asChild
+            onClick={onItemClick}
+          >
+            <Link href={navItem.href}>
+              {navItem.icon}
+              {navItem.title}
+            </Link>
+          </Button>
+        </motion.div>
       ))}
-    </nav>
+    </motion.nav>
   );
 }

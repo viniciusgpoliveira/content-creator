@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useTranslation } from "react-i18next";
-import { Menu, User, LogOut, Settings } from "lucide-react";
+import { User, LogOut, Settings } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { AnimatedSheet } from "./animated-sheet";
 import { DashboardNav } from "./dashboard-nav";
 import {
   DropdownMenu,
@@ -29,21 +30,9 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
-      <div className="container flex h-14 items-center justify-between py-4">
-        <div className="flex items-center gap-2 md:gap-4">
-          {isMobile && (
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="md:hidden">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">{t("common.toggleMenu")}</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="pr-0">
-                <DashboardNav onItemClick={() => setOpen(false)} />
-              </SheetContent>
-            </Sheet>
-          )}
+      <div className="container mx-auto max-w-7xl flex h-14 items-center justify-between py-4 px-4 md:px-6">
+        <div className="flex items-center gap-2 md:gap-4 pl-0 md:pl-2">
+          {isMobile && <AnimatedSheet isOpen={open} setOpen={setOpen} />}
           <Link href="/dashboard" className="flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
