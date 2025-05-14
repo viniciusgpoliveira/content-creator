@@ -7,7 +7,7 @@ import { formatDate, truncateString } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useNotification } from "@/context/notification-context";
-import { FileText, MessageSquare, ExternalLink } from "lucide-react";
+import { FileText, MessageSquare, ExternalLink, Sparkles } from "lucide-react";
 
 type Generation = {
   id: string;
@@ -30,44 +30,12 @@ export function LatestGenerations() {
         // const response = await fetch('/api/generations?limit=5');
         // const data = await response.json();
 
-        // Mock data
+        // In a real app, we would fetch from the API and set the data
+        // For now, we'll just set an empty array to show the empty state
         setTimeout(() => {
-          const mockGenerations: Generation[] = [
-            {
-              id: "1",
-              toolType: "blog",
-              outputContent: "# The Future of AI in Content Creation\n\nArtificial intelligence is revolutionizing how we create content...",
-              createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
-            },
-            {
-              id: "2",
-              toolType: "caption",
-              outputContent: "1. Elevate your social media game with our new analytics dashboard! 📊 #SocialMediaTips\n2. Data-driven decisions just got easier...",
-              createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(), // 5 hours ago
-            },
-            {
-              id: "3",
-              toolType: "blog",
-              outputContent: "# 10 Tips for Better Social Media Engagement\n\nEngaging with your audience effectively is key to building a strong online presence...",
-              createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-            },
-            {
-              id: "4",
-              toolType: "caption",
-              outputContent: "1. Transform your workflow with AI-powered tools that save you hours every day! ⏱️ #Productivity\n2. Work smarter, not harder...",
-              createdAt: new Date(Date.now() - 1000 * 60 * 60 * 30).toISOString(), // 30 hours ago
-            },
-            {
-              id: "5",
-              toolType: "blog",
-              outputContent: "# How to Build a Personal Brand Online\n\nIn today's digital landscape, having a strong personal brand is more important than ever...",
-              createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(), // 2 days ago
-            },
-          ];
-
-          setGenerations(mockGenerations);
+          setGenerations([]);
           setIsLoading(false);
-        }, 1500);
+        }, 500);
       } catch (error) {
         console.error("Error fetching generations:", error);
         showNotification("error", t("errors.general"));
@@ -98,18 +66,22 @@ export function LatestGenerations() {
   return (
     <div className="space-y-4">
       {generations.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">{t("dashboard.noGenerations")}</p>
-          <div className="mt-4 flex justify-center gap-4">
-            <Button asChild>
+        <div className="text-center py-12 flex flex-col items-center">
+          <div className="mb-6 bg-muted/50 rounded-full p-6 inline-flex">
+            <Sparkles className="h-12 w-12 text-primary/70" />
+          </div>
+          <h3 className="text-xl font-medium mb-2">{t("dashboard.noGenerationsTitle")}</h3>
+          <p className="text-muted-foreground max-w-md mb-6">{t("dashboard.noGenerations")}</p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button asChild className="gap-2">
               <Link href="/tools/blog">
-                <FileText className="mr-2 h-4 w-4" />
+                <FileText className="h-4 w-4" />
                 {t("blogGenerator.title")}
               </Link>
             </Button>
-            <Button asChild>
+            <Button asChild className="gap-2" variant="outline">
               <Link href="/tools/caption">
-                <MessageSquare className="mr-2 h-4 w-4" />
+                <MessageSquare className="h-4 w-4" />
                 {t("captionGenerator.title")}
               </Link>
             </Button>
