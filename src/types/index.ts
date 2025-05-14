@@ -1,4 +1,4 @@
-import { User, Generation, EngagementMetric } from "@prisma/client";
+import { User, Generation, EngagementMetric } from "@generated/prisma/client";
 
 export type UserWithRelations = User & {
   generations?: Generation[];

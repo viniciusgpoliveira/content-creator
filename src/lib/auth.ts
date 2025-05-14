@@ -6,7 +6,6 @@ import { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
-import { PrismaClient } from "@prisma/client";
 
 // Extend the next-auth session type
 declare module "next-auth" {
