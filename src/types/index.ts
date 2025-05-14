@@ -16,12 +16,13 @@ export type EngagementMetricWithUser = EngagementMetric & {
 export type BlogPostParams = {
   topic: string;
   tone: "professional" | "casual" | "humorous" | "formal" | "friendly";
-  keywords: string[];
+  description?: string;
 };
 
 export type SocialCaptionParams = {
   productTheme: string;
   platform: "twitter" | "linkedin" | "instagram" | "facebook";
+  description?: string;
 };
 
 export type MetricType = "readTime" | "clickThrough" | "shareCount";
