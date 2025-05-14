@@ -5,6 +5,8 @@ import { LoginForm } from "@/components/auth/login-form";
 import { getTranslations } from "@/lib/i18n-server";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { PageTransition } from "@/components/page-transition";
+import { AnimatedTestimonial } from "@/components/auth/animated-testimonial";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -21,14 +23,16 @@ export default async function LoginPage() {
 
   const t = await getTranslations();
   return (
-    <div className="container relative flex h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <PageTransition>
+      <div className="container relative flex h-screen flex-col items-center justify-center px-4 md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900">
           <Image
-            src="/images/login-bg.jpg"
+            src="https://images.unsplash.com/photo-1674505613923-98085d3712fd?auto=format&fit=crop&q=80&w=1920&h=1080"
             fill
             alt="Login background"
             className="object-cover opacity-30"
+            priority
           />
         </div>
         <div className="relative z-20 flex items-center text-lg font-medium">
@@ -47,15 +51,10 @@ export default async function LoginPage() {
           {t('common.welcome')}
         </div>
         <div className="relative z-20 mt-auto">
-          <blockquote className="space-y-2">
-            <p className="text-lg">
-              "{t('dashboard.testimonial')}"
-            </p>
-            <footer className="text-sm">{t('dashboard.testimonialAuthor')}</footer>
-          </blockquote>
+          <AnimatedTestimonial />
         </div>
       </div>
-      <div className="lg:p-8">
+      <div className="w-full p-4 lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -97,5 +96,6 @@ export default async function LoginPage() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }
