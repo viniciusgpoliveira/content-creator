@@ -38,7 +38,7 @@ A modern dashboard for content creators to generate blog posts and social media 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/content-creator-dashboard.git
+git clone https://github.com/viniciusgpoliveira/content-creator-dashboard.git
 cd content-creator-dashboard
 ```
 
